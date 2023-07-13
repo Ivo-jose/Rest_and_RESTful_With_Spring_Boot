@@ -28,7 +28,7 @@ public class MockPerson {
 		return personsVO;
 	}
 
-	private Person mockEntity(Integer number) {
+	public Person mockEntity(Integer number) {
 		Person person = new Person();
 		person.setId(number.longValue());
 		person.setFirstName("First Name Test" + number);
@@ -38,9 +38,9 @@ public class MockPerson {
 		return person;
 	}
 	
-	private PersonVO mockVO(Integer number) {
+	public PersonVO mockVO(Integer number) {
 		PersonVO personVO = new PersonVO();
-		personVO.setId(number.longValue());
+		personVO.setIdPerson(number.longValue());
 		personVO.setFirstName("First Name Test" + number);
 		personVO.setLastName("Last Name Test" + number);
 		personVO.setAddress("Address Test" + number);
