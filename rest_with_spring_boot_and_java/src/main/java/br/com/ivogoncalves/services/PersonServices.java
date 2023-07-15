@@ -24,7 +24,7 @@ public class PersonServices {
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 	
 	public PersonVO findById(Long id) {
-		logger.info("Finding one Person...");
+		logger.info("Finding a Person...");
 		var entity = repository.findById(id).orElseThrow(() 
 				-> new ResourceNotFoundException("There are no records for this id! Id: " + id));
 		PersonVO vo = DozerMapper.parseObject(entity, PersonVO.class);
@@ -42,7 +42,7 @@ public class PersonServices {
 	
 	public PersonVO create(PersonVO person) {
 		if(person == null) throw new RequiredObjectIsNullException();
-		logger.info("Creating one Person...");
+		logger.info("Creating a Person...");
 		var entity = DozerMapper.parseObject(person, Person.class);
 		PersonVO vo = DozerMapper.parseObject(repository.save(entity), PersonVO.class);
 		vo.add(linkTo(methodOn(PersonController.class).findById(person.getIdPerson())).withSelfRel());
@@ -51,7 +51,7 @@ public class PersonServices {
 	
 	public PersonVO update(PersonVO person) {
 		if(person == null) throw new RequiredObjectIsNullException();
-		logger.info("Updating one Person...");
+		logger.info("Updating a Person...");
 		var entity = repository.findById(person.getIdPerson()).orElseThrow(() 
 							  -> new ResourceNotFoundException("There are no records for this id! Id: " + person.getIdPerson()));
 		entity.setFirstName(person.getFirstName());
@@ -64,7 +64,7 @@ public class PersonServices {
 	}
 	
 	public void delete(Long id) {
-		logger.info("Deleting one Person...");
+		logger.info("Deleting a Person...");
 		var entity = repository.findById(id).orElseThrow(() 
 				   -> new ResourceNotFoundException("There are no records for this id! Id: " + id));
 		repository.delete(entity);
