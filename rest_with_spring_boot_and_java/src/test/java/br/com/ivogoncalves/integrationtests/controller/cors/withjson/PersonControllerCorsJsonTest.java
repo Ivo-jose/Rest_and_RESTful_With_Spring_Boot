@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -94,6 +95,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getAddress());
 		assertNotNull(persistedPerson.getGender());
+		assertTrue(persistedPerson.getEnabled());
 		assertTrue(persistedPerson.getId() > 0);
 		assertEquals("Richard", persistedPerson.getFirstName());
 		assertEquals("Stallman", persistedPerson.getLastName());
@@ -145,6 +147,7 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 		assertNotNull(persistedPerson.getLastName());
 		assertNotNull(persistedPerson.getAddress());
 		assertNotNull(persistedPerson.getGender());
+		assertTrue(persistedPerson.getEnabled());
 		assertTrue(persistedPerson.getId() > 0);
 		assertEquals("Richard", persistedPerson.getFirstName());
 		assertEquals("Stallman", persistedPerson.getLastName());
@@ -178,5 +181,6 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 		person.setLastName("Stallman");
 		person.setAddress("New York City, New York - USA");
 		person.setGender("Male");
+		person.setEnabled(true);
 	}
 }

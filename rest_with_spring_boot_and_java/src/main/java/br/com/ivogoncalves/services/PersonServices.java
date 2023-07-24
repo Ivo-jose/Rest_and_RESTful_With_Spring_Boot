@@ -15,6 +15,7 @@ import br.com.ivogoncalves.exceptions.ResourceNotFoundException;
 import br.com.ivogoncalves.mapper.DozerMapper;
 import br.com.ivogoncalves.model.Person;
 import br.com.ivogoncalves.respositories.PersonRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PersonServices {
@@ -62,6 +63,19 @@ public class PersonServices {
 		vo.add(linkTo(methodOn(PersonController.class).findById(person.getIdPerson())).withSelfRel());
 		return vo;
 	}
+	
+	@Transactional
+	public PersonVO disablePerson(Long id) {
+		logger.info("Disabling a Person...");
+		repository.disablePerson(id);
+		var entity = repository.findById(id).orElseThrow(() 
+				-> new ResourceNotFoundException("There are no records for this id! Id: " + id));
+		PersonVO vo = DozerMapper.parseObject(entity, PersonVO.class);
+		vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+		return vo;
+		
+	}
+	
 	
 	public void delete(Long id) {
 		logger.info("Deleting a Person...");
