@@ -1,9 +1,11 @@
 package br.com.ivogoncalves.unittests.mockito.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -110,44 +112,5 @@ class PersonServicesTest {
 		Person entity = input.mockEntity(1);
 		when(repository.findById(1L)).thenReturn(Optional.of(entity));
 		service.delete(1L);
-	}
-
-	@Test
-	void testFindAll() {
-		List<Person> list = input.mockEntityList();
-		when(repository.findAll()).thenReturn(list);
-		var people = service.findAll();
-		assertNotNull(people);
-		assertEquals(14, people.size());
-		
-		var personOne = people.get(1);
-		assertNotNull(personOne);
-		assertNotNull(personOne.getIdPerson());
-		assertNotNull(personOne.getLinks());
-		assertTrue(personOne.toString().contains("links: [</api/person/v1/1>;rel=\"self\"]"));
-		assertEquals("First Name Test1", personOne.getFirstName());
-		assertEquals("Last Name Test1", personOne.getLastName());
-		assertEquals("Address Test1", personOne.getAddress());
-		assertEquals("Female", personOne.getGender());
-		
-		var personFour = people.get(4);
-		assertNotNull(personFour);
-		assertNotNull(personFour.getIdPerson());
-		assertNotNull(personFour.getLinks());
-		assertTrue(personFour.toString().contains("links: [</api/person/v1/4>;rel=\"self\"]"));
-		assertEquals("First Name Test4", personFour.getFirstName());
-		assertEquals("Last Name Test4", personFour.getLastName());
-		assertEquals("Address Test4", personFour.getAddress());
-		assertEquals("Male", personFour.getGender());
-		
-		var personSeven = people.get(7);
-		assertNotNull(personSeven);
-		assertNotNull(personSeven.getIdPerson());
-		assertNotNull(personSeven.getLinks());
-		assertTrue(personSeven.toString().contains("links: [</api/person/v1/7>;rel=\"self\"]"));
-		assertEquals("First Name Test7", personSeven.getFirstName());
-		assertEquals("Last Name Test7", personSeven.getLastName());
-		assertEquals("Address Test7", personSeven.getAddress());
-		assertEquals("Female", personSeven.getGender());
 	}
 }

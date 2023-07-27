@@ -1,12 +1,11 @@
 package br.com.ivogoncalves.integrationtests.controller.withxml;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -26,6 +24,7 @@ import br.com.ivogoncalves.integrationtests.testcontainers.AbstractIntegrationTe
 import br.com.ivogoncalves.integrationtests.vo.AccountCredentialsVO;
 import br.com.ivogoncalves.integrationtests.vo.BookVO;
 import br.com.ivogoncalves.integrationtests.vo.TokenVO;
+import br.com.ivogoncalves.integrationtests.vo.pagedmodels.PagedModelBook;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -181,6 +180,7 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		var content = given().spec(specification)
 				 .contentType(TestConfigs.CONTENT_TYPE_XML)
+				 .queryParams("page",3, "size", 10, "direction", "asc")
 				 .accept(TestConfigs.CONTENT_TYPE_XML)
 				 .when()
 				 	.get()
@@ -189,8 +189,9 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 				 		.extract()
 				 			.body()
 				 			  .asString();
-		List<BookVO> people = objectMapper.readValue(content, new TypeReference<List<BookVO>>(){});
-
+		PagedModelBook wrapper = objectMapper.readValue(content, PagedModelBook.class);
+		var people = wrapper.getContent();
+		
 		BookVO bookOne = people.get(0);
 		assertNotNull(bookOne.getId());
         assertNotNull(bookOne.getTitle());
@@ -199,9 +200,9 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
         assertNotNull(bookOne.getLaunchDate());
         assertTrue(bookOne.getId() > 0);
         assertEquals(people.get(0).getId(), bookOne.getId());
-        assertEquals("Working effectively with legacy code", bookOne.getTitle());
-        assertEquals("Michael C. Feathers", bookOne.getAuthor());
-        assertEquals(49.00, bookOne.getPrice());
+        assertEquals("Account Representative IV", bookOne.getTitle());
+        assertEquals("Leonid Buckthorp", bookOne.getAuthor());
+        assertEquals(74.36, bookOne.getPrice());
 		
 		BookVO bookSix = people.get(5);
 		assertNotNull(bookSix.getId());
@@ -211,9 +212,9 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
         assertNotNull(bookSix.getLaunchDate());
         assertTrue(bookSix.getId() > 0);
         assertEquals(people.get(5).getId(), bookSix.getId());
-        assertEquals("Refactoring", bookSix.getTitle());
-        assertEquals("Martin Fowler e Kent Beck", bookSix.getAuthor());
-        assertEquals(88.00, bookSix.getPrice());
+        assertEquals("Accountant III", bookSix.getTitle());
+        assertEquals("Gloriana Deathridge", bookSix.getAuthor());
+        assertEquals(476.03, bookSix.getPrice());
 	}
 
 	@Test
@@ -232,6 +233,33 @@ public class BookControllerXmlTest extends AbstractIntegrationTest {
 				.get()
 			.then()
 				.statusCode(403);
+	}
+	
+	@Test
+	@Order(7)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		var content = given().spec(specification)
+				 .contentType(TestConfigs.CONTENT_TYPE_XML)
+				 .queryParams("page",3, "size", 10, "direction", "asc")
+				 .accept(TestConfigs.CONTENT_TYPE_XML)
+				 .when()
+				 	.get()
+				 .then()
+				 	.statusCode(200)
+				 		.extract()
+				 			.body()
+				 			  .asString();
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/527</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/249</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/341</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1/887</href></links>"));
+		assertTrue(content.contains("<links><rel>first</rel><href>http://localhost:8888/api/book/v1?direction=asc&amp;page=0&amp;size=10&amp;sort=title,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>prev</rel><href>http://localhost:8888/api/book/v1?direction=asc&amp;page=2&amp;size=10&amp;sort=title,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>self</rel><href>http://localhost:8888/api/book/v1?page=3&amp;size=10&amp;direction=asc</href></links>"));
+		assertTrue(content.contains("<links><rel>next</rel><href>http://localhost:8888/api/book/v1?direction=asc&amp;page=4&amp;size=10&amp;sort=title,asc</href></links>"));
+		assertTrue(content.contains("<links><rel>last</rel><href>http://localhost:8888/api/book/v1?direction=asc&amp;page=101&amp;size=10&amp;sort=title,asc</href></links>"));
+		assertTrue(content.contains("<page><size>10</size><totalElements>1015</totalElements><totalPages>102</totalPages><number>3</number></page>"));
+		
 	}
 	
 	private void mockBook() {

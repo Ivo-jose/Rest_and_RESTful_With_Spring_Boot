@@ -1,12 +1,11 @@
 package br.com.ivogoncalves.integrationtests.controller.withjson;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +24,7 @@ import br.com.ivogoncalves.integrationtests.testcontainers.AbstractIntegrationTe
 import br.com.ivogoncalves.integrationtests.vo.AccountCredentialsVO;
 import br.com.ivogoncalves.integrationtests.vo.BookVO;
 import br.com.ivogoncalves.integrationtests.vo.TokenVO;
+import br.com.ivogoncalves.integrationtests.vo.wrappers.WrapperBookVO;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
@@ -175,6 +174,7 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 	public void testFindAll() throws JsonMappingException, JsonProcessingException {
 		var content = given().spec(specification)
 				 .contentType(TestConfigs.CONTENT_TYPE_JSON)
+				 .queryParams("page",3, "size", 10, "direction", "asc")
 				 .when()
 				 	.get()
 				 .then()
@@ -182,7 +182,8 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 				 		.extract()
 				 			.body()
 				 			  .asString();
-		List<BookVO> people = objectMapper.readValue(content, new TypeReference<List<BookVO>>(){});
+		WrapperBookVO wrapper = objectMapper.readValue(content, WrapperBookVO.class);
+		var people = wrapper.getEmbedded().getBooks();
 
 		BookVO bookOne = people.get(0);
 		assertNotNull(bookOne.getId());
@@ -192,9 +193,9 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(bookOne.getLaunchDate());
         assertTrue(bookOne.getId() > 0);
         assertEquals(people.get(0).getId(), bookOne.getId());
-        assertEquals("Working effectively with legacy code", bookOne.getTitle());
-        assertEquals("Michael C. Feathers", bookOne.getAuthor());
-        assertEquals(49.00, bookOne.getPrice());
+        assertEquals("Account Representative IV", bookOne.getTitle());
+        assertEquals("Leonid Buckthorp", bookOne.getAuthor());
+        assertEquals(74.36, bookOne.getPrice());
 		
 		BookVO bookSix = people.get(5);
 		assertNotNull(bookSix.getId());
@@ -204,9 +205,9 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
         assertNotNull(bookSix.getLaunchDate());
         assertTrue(bookSix.getId() > 0);
         assertEquals(people.get(5).getId(), bookSix.getId());
-        assertEquals("Refactoring", bookSix.getTitle());
-        assertEquals("Martin Fowler e Kent Beck", bookSix.getAuthor());
-        assertEquals(88.00, bookSix.getPrice());
+        assertEquals("Accountant III", bookSix.getTitle());
+        assertEquals("Gloriana Deathridge", bookSix.getAuthor());
+        assertEquals(476.03, bookSix.getPrice());
 	}
 
 	@Test
@@ -226,6 +227,32 @@ public class BookControllerJsonTest extends AbstractIntegrationTest {
 			.then()
 				.statusCode(403);
 	}
+	
+	@Test
+	@Order(7)
+	public void testHATEOAS() throws JsonMappingException, JsonProcessingException {
+		var content = given().spec(specification)
+				 .contentType(TestConfigs.CONTENT_TYPE_JSON)
+				 .queryParams("page",3, "size", 10, "direction", "asc")
+				 .when()
+				 	.get()
+				 .then()
+				 	.statusCode(200)
+				 		.extract()
+				 			.body()
+				 			  .asString();
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/527\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/249\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/341\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"self\":{\"href\":\"http://localhost:8888/api/book/v1/887\"}}}"));
+		assertTrue(content.contains("\"_links\":{\"first\":{\"href\":\"http://localhost:8888/api/book/v1?direction=asc&page=0&size=10&sort=title,asc\"}"));
+		assertTrue(content.contains("\"prev\":{\"href\":\"http://localhost:8888/api/book/v1?direction=asc&page=2&size=10&sort=title,asc\"}"));
+		assertTrue(content.contains("\"self\":{\"href\":\"http://localhost:8888/api/book/v1?page=3&size=10&direction=asc\"}"));
+		assertTrue(content.contains("\"next\":{\"href\":\"http://localhost:8888/api/book/v1?direction=asc&page=4&size=10&sort=title,asc\"}"));
+		assertTrue(content.contains("\"last\":{\"href\":\"http://localhost:8888/api/book/v1?direction=asc&page=101&size=10&sort=title,asc\"}}"));
+		assertTrue(content.contains("\"page\":{\"size\":10,\"totalElements\":1015,\"totalPages\":102,\"number\":3}}"));
+	}
+
 	
 	private void mockBook() {
         book.setTitle("Docker Deep Dive");
