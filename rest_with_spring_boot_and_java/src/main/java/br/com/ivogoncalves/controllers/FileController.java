@@ -27,9 +27,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
-@Tag(name = "File Endpoint", description = "Endpoints to manage file uploads and downloads")
+
 @RestController
 @RequestMapping("/api/file/v1")
+@Tag(name = "File Endpoint", description = "Endpoints to manage file uploads and downloads")
 public class FileController {
 
 	@Autowired
@@ -37,8 +38,7 @@ public class FileController {
 	Logger logger = Logger.getLogger(FileController.class.getName());
 
 	@PostMapping("/uploadFile")
-	@Operation(summary = "Upload a file", description = "Upload a file", 
-	  tags = {"Books"}, responses = {
+	@Operation(summary = "Upload a file", description = "Upload a file", responses = {
 	 	@ApiResponse(description = "Success", responseCode = "200", content = @Content),
 	 	@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 	 	@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -55,8 +55,7 @@ public class FileController {
 	}
 	
 	@PostMapping("/uploadMultipleFiles")
-	@Operation(summary = "Upload files", description = "Upload files", 
-	tags = {"Books"}, responses = {
+	@Operation(summary = "Upload files", description = "Upload files", responses = {
 			@ApiResponse(description = "Success", responseCode = "200", content = @Content),
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -69,8 +68,7 @@ public class FileController {
 	}
 	
 	@GetMapping("/dowloadFile/{filename:.+}")
-	@Operation(summary = "Dowload a file", description = "Dowload a file", 
-	  tags = {"Books"}, responses = {
+	@Operation(summary = "Dowload a file", description = "Dowload a file", responses = {
 	 	@ApiResponse(description = "Success", responseCode = "200", content = @Content),
 	 	@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 	 	@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
