@@ -14,7 +14,7 @@ public class OpenApiConfig {
 	OpenAPI customOpenAPI() {
 		return new OpenAPI()
 			.info(new Info()
-					.title("RESTful API with Java 19 and Spring Boot 3.1.1")
+					.title("RESTful API with Java 19 and Spring Boot 3.1.1 - Doc.")
 					.version("v1")
 					.description("For skill development")
 					.termsOfService("https://github.com/Ivo-jose/Rest_and_RESTful_With_Spring_Boot/tree/main")
