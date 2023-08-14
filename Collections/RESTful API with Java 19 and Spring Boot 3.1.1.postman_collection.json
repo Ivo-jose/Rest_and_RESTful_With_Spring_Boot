@@ -35,8 +35,7 @@
 											{
 												"key": "Accept",
 												"value": "application/x-yaml",
-												"type": "text",
-												"disabled": true
+												"type": "text"
 											},
 											{
 												"key": "Content-Type",
@@ -441,7 +440,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"id\": 17,\n    \"firstName\": \"Carrie\",\n    \"lastName\": \"Fisher\",\n    \"address\": \"Los Angeles, California - US\",\n    \"gender\": \"Female\"\n}",
+											"raw": "{\n    \"id\": 1015,\n    \"firstName\": \"Carrie\",\n    \"lastName\": \"Fisher\",\n    \"address\": \"Los Angeles, California - US\",\n    \"gender\": \"Female\",\n    \"enabled\": true\n}",
 											"options": {
 												"raw": {
 													"headerFamily": "json",
@@ -701,7 +700,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"firstName\": \"Carrie\",\n  \"lastName\": \"Fisher uhsuhsuhushsh\",\n  \"address\": \"Los Angeles, California - US\",\n  \"gender\": \"Female\"\n}",
+											"raw": "{\n  \"firstName\": \"Carrie\",\n  \"lastName\": \"Fisher uhsuhsuhushsh\",\n  \"address\": \"Los Angeles, California - US\",\n  \"gender\": \"Female\",\n  \"enabled\": true\n}",
 											"options": {
 												"raw": {
 													"headerFamily": "json",
@@ -934,7 +933,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/api/person/v1/23",
+											"raw": "{{baseUrl}}/api/person/v1/13",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -942,7 +941,7 @@
 												"api",
 												"person",
 												"v1",
-												"23"
+												"13"
 											]
 										},
 										"description": "Finds a Person"
@@ -1404,7 +1403,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{baseUrl}}/api/person/v1/17",
+											"raw": "{{baseUrl}}/api/person/v1/1015",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -1412,7 +1411,7 @@
 												"api",
 												"person",
 												"v1",
-												"17"
+												"1015"
 											]
 										},
 										"description": "Deletion with id passed by Path params"
