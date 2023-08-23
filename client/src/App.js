@@ -1,13 +1,16 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
-
-//Components
-import Header from './Header';
+//CSS
+import './global.css'
+//Component
+import Login from './pages/Login';
 
 export default function App() {
   return (
-   <Header>
-      Hello Client Udemy - Properties
-   </Header>
+    <div>
+      <Login>
+      </Login>
+    </div>
   );
 }
 
