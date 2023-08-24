@@ -5,7 +5,7 @@
     margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .login-container section.form {
@@ -15,7 +15,7 @@
 }
 
 .login-container section.form img {
-    width: 65%;
+    width: 45%;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -31,6 +31,18 @@
 }
 
 @media (min-width: 700px) and (max-width: 1370px) {
+
+    .login-container {
+        width: 100%;
+        max-width: 1120px;
+        height: 90vh;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+
     .login-container img {
         width: 312px;
         height: 309px;

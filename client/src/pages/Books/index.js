@@ -7,13 +7,13 @@ import './styles.css';
 //Images
 import logo from '../../assets/logo.svg';
 
-export default function Book() {
+export default function Books() {
     return(
         <div className="book-container">
             <header>
                 <img src={logo} alt="Logo" />
                 <span>Welcome, <strong>Ivo</strong>!</span>
-                <Link className="button" to="book/new">Add New Book</Link>
+                <Link className="button" to="/book/new">Add New Book</Link>
                 <button type="button">
                     <FiPower size={20} color="#251FE5"></FiPower>
                 </button>
