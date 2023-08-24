@@ -3,13 +3,12 @@ import React from 'react';
 //CSS
 import './global.css'
 //Component
-import Login from './pages/Login';
+import AppRoutes from './routes';
 
 export default function App() {
   return (
     <div>
-      <Login>
-      </Login>
+      <AppRoutes/>
     </div>
   );
 }
