@@ -2,7 +2,7 @@ import React from 'react';
 //CSS
 import './styles.css'
 //Images
-import logo from '../../assets/logo.svg'
+import logo from '../../assets/logo.svg';
 import padLock from '../../assets/padlock.png';
 
 export default function Login() {

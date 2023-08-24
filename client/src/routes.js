@@ -11,7 +11,7 @@ export default function AppRoutes() {
          <BrowserRouter>
             <Routes>
                 <Route path="/" element={ <Login/> } />
-                <Route path="/book" element={ <Book/> } />
+                <Route path="/book"  element={ <Book/> } />
             </Routes>
          </BrowserRouter>    
     );
