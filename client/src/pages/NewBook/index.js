@@ -34,8 +34,7 @@ export default function NewBook(){
         try {
             await api.post('/api/book/v1', data, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    Accept: 'application/json'
+                    Authorization: `Bearer ${accessToken}`
                 }
             });
             navigate('/books');
