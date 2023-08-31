@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 //Libs
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -31,6 +32,14 @@ export default function Books() {
     async function logout(){
         localStorage.clear();
         navigate('/')
+    }
+
+    async function editBook(id) {
+        try {
+            navigate(`/book/edit/${id}`)
+        } catch (error) {
+            alert('Edit failed! Try again!')
+        }
     }
 
     async function deleteBook(id) {
@@ -88,7 +97,7 @@ export default function Books() {
                     <strong>Release Date:</strong>
                     <p>{Intl.DateTimeFormat('pt-br').format(new Date(book.launchDate))}</p>
 
-                    <button type="button">
+                    <button onClick={() => editBook(book.id)} type="button">
                         <FiEdit size={20} color="#251FC5"></FiEdit>
                     </button>
                     <button onClick={() => deleteBook(book.id)} type="button">
