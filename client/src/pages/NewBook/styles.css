@@ -81,3 +81,10 @@
         text-decoration: none;
     }
 }
+
+@media (max-width: 699px) {
+    .form{
+        display: none;
+    }
+    
+}

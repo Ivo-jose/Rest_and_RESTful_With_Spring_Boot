@@ -129,6 +129,13 @@
     font-weight: bold;
 }
 
+#specific-page input {
+    max-width: 130px;
+    color: #251FC5;
+    border: 0.03rem solid #251FC5;
+    border-radius: 0.3125rem;
+}
+
 @media (min-width: 700px) and (max-width: 1370px)  {
     .book-container {
         min-width: 21.875rem;
@@ -172,15 +179,27 @@
     }
 }
 
-@media (min-width: 350px) and (max-width: 699px)  {
+@media(max-width: 699px)  {
     .book-container {
         min-width: 21.875rem;
     }
-    
+
     .book-container ul {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         grid-gap: 1.5rem;
         list-style: none;
+    }
+}
+
+
+@media (max-width: 486px) {
+    #specific-page {
+        display: block;
+        width: 100%;
+    }
+
+    #specific-page input {
+        width: 50px;
     }
 }

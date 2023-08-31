@@ -18,13 +18,45 @@ export default function Books() {
     const username = localStorage.getItem('username');
     const accessToken = localStorage.getItem('accessToken');
     let  [totalPages, setTotalPages] = useState(0);
+    let [inputPage, setInputPage] = useState("");
 
     const navigate = useNavigate();
 
+    function handleGoToPage(page) {
+        if (page >= 0 && page < totalPages) {
+            setCurrentPage(page);
+        }
+    }
+
+    async function logout(){
+        localStorage.clear();
+        navigate('/')
+    }
+
+    async function deleteBook(id) {
+        console.log(id)
+        try {
+            await api.delete(`/api/book/v1/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            })
+
+            setBooks(books.filter(book => book.id !== id))
+        } catch (error) {
+            alert("Delete faield! Try again!")
+        }
+    }
+
     useEffect(() => {
-        api.get(`/api/book/v1?page=${currentPage}&size=${itemsPerPage}`, {
+        api.get(`/api/book/v1`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
+            },
+            params: {
+                page: currentPage,
+                size: itemsPerPage,
+                direction: 'asc'
             }    
         }).then(response => {
             setBooks(response.data._embedded.bookVOList);
@@ -38,7 +70,7 @@ export default function Books() {
                 <img src={logo} alt="Logo" />
                 <span>Welcome, <strong>{username.substring(0,1).toUpperCase() + username.substring(1)}</strong>!</span>
                 <Link className="button" to="/book/new">Add New Book</Link>
-                <button type="button">
+                <button onClick={logout} type="button">
                     <FiPower size={20} color="#251FE5"></FiPower>
                 </button>
             </header>
@@ -59,7 +91,7 @@ export default function Books() {
                     <button type="button">
                         <FiEdit size={20} color="#251FC5"></FiEdit>
                     </button>
-                    <button type="button">
+                    <button onClick={() => deleteBook(book.id)} type="button">
                         <FiTrash2 size={20} color="#251FC5"></FiTrash2>
                     </button>
                  </li>
@@ -67,15 +99,26 @@ export default function Books() {
             </ul>
 
             <div id="container-buttons-page">
-                <button id="previous" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 0}>
+                <button  onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 0} id="previous"> 
                     Previous
                 </button>
                 <p>
                     Page {currentPage + 1} of {totalPages}
                 </p>
-                <button id="next" onClick={() => setCurrentPage(currentPage + 1)}>
+                <button id="next" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === 101}>
                     Next
                 </button>
+                <div id="specific-page">
+                    <input
+                        type="number"
+                        placeholder={`Page (1 - ${totalPages})`}
+                        value={inputPage}
+                        onChange={(e) => setInputPage(e.target.value)}
+                    />
+                    <button onClick={() => handleGoToPage(inputPage - 1)} id="go">
+                        Go
+                    </button>
+                </div>
             </div>
         </div>
     );
