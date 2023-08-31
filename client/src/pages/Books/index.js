@@ -12,21 +12,25 @@ import api from '../../services/api';
 export default function Books() {
 
     const [books, setBooks] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0); 
+    const [itemsPerPage, setItemsPerPage] = useState(10); 
 
     const username = localStorage.getItem('username');
     const accessToken = localStorage.getItem('accessToken');
+    let  [totalPages, setTotalPages] = useState(0);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        api.get('/api/book/v1', {
+        api.get(`/api/book/v1?page=${currentPage}&size=${itemsPerPage}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }    
         }).then(response => {
-            setBooks(response.data._embedded.bookVOList)
+            setBooks(response.data._embedded.bookVOList);
+            setTotalPages(response.data.page.totalPages);
         })
-    },[])
+    },[accessToken, currentPage, itemsPerPage])
 
     return(
         <div className="book-container">
@@ -61,6 +65,18 @@ export default function Books() {
                  </li>
                ))} 
             </ul>
+
+            <div id="container-buttons-page">
+                <button id="previous" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 0}>
+                    Previous
+                </button>
+                <p>
+                    Page {currentPage + 1} of {totalPages}
+                </p>
+                <button id="next" onClick={() => setCurrentPage(currentPage + 1)}>
+                    Next
+                </button>
+            </div>
         </div>
     );
 }
